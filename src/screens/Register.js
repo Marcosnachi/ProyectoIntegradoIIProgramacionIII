@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { TextInput, TouchableOpacity, Text, View, StyleSheet } from "react-native";
 
+
 export default class Register extends Component {
     constructor (props){
         super(props);
@@ -8,13 +9,11 @@ export default class Register extends Component {
             UserName: '',
             email: '',
             password: ''
+            
         }
     }
 
-    handleRegister(){
-
-        alert (`nombre de usuario: ${this.state.UserName} email: ${this.state.email}, password: ${this.state.password} `)
-    }
+    
     
 
     render(){
@@ -44,7 +43,7 @@ export default class Register extends Component {
                 secureTextEntry = {true}
                 />
                 
-                <TouchableOpacity style = {styles.button} onPress = {()=> this.handleRegister()}>
+                <TouchableOpacity style = {styles.button} onPress = {()=> this.props.handleRegister(this.state.email, this.state.password, this.state.UserName)}>
 
                  <Text style = {styles.text}> Register </Text> 
 

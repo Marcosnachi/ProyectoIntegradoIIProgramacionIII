@@ -1,19 +1,17 @@
 import React, {Component} from "react";
 import { TextInput, TouchableOpacity, Text, View, StyleSheet } from "react-native";
 
+
 export default class Login extends Component {
     constructor (props){
         super(props);
         this.state = {
             email: '',
             password: ''
+            
         }
     }
 
-    handleLogin(){
-
-        alert (`usuario: ${this.state.email}, password: ${this.state.password} `)
-    }
     
 
     render(){
@@ -35,7 +33,7 @@ export default class Login extends Component {
                 secureTextEntry = {true}
                 />
                 
-                <TouchableOpacity style = {styles.button} onPress = {()=> this.handleLogin()}>
+                <TouchableOpacity style = {styles.button} onPress = {()=> this.props.handleLogin(this.state.email, this.state.password)}>
 
                  <Text style = {styles.text}> Login </Text> 
 
