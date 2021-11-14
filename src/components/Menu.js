@@ -7,6 +7,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import Home from '../screens/Home';
 import { auth } from '../firebase/config';
+import CreatePost from '../screens/CreatePost';
 
 export default class Menu extends Component {
 
@@ -20,6 +21,16 @@ export default class Menu extends Component {
     }
 
 
+    componentDidMount(){
+        
+        auth.onAuthStateChanged( user => {
+            if (user) {
+                this.setState({
+                    loggedIn: true
+                })
+            }
+        })
+    }
 
 
   handleLogin(email, password){
@@ -44,12 +55,16 @@ export default class Menu extends Component {
 }
 
 
-handleRegister(email, password) {
+handleRegister(email, password, userName) {
         
     auth.createUserWithEmailAndPassword(email, password)
     .then( response => {
         console.log(response);
         alert("registrado");
+
+        response.user.updateProfile({
+            displayName: userName
+        })
         
         this.setState({
             loggedIn: true
@@ -64,6 +79,19 @@ handleRegister(email, password) {
         })
     })
 }
+
+
+handleLogout(){
+    auth.signOut()
+    .then(()=> {
+        this.setState({
+            loggedIn: false
+        })
+    })
+    .catch(error => {
+        console.log(error);
+    })
+}
     
 
 render(){
@@ -74,17 +102,25 @@ render(){
 
         <NavigationContainer>
         <Drawer.Navigator initialRouteName="Login">
-        {this.state.loggedIn === true ?
+                 {this.state.loggedIn === true ? 
 
-          <Drawer.Screen name = "Home" component={Home}></Drawer.Screen>
-          
+                <>    
+
+                <Drawer.Screen name = "Home">
+                {props => <Home {...props} handleLogout={()=>this.handleLogout()}/>}
+                </Drawer.Screen>
+
+                <Drawer.Screen name = "CreatePost">
+                {props => <CreatePost {...props} />}
+                </Drawer.Screen>
+                </>
           :
 <>
           <Drawer.Screen name = "Login">
               {props => <Login {...props} handleLogin= {(email, password) => this.handleLogin(email, password)}/>}
           </Drawer.Screen>
           <Drawer.Screen name = "Register">
-              {props => <Register {...props} handleRegister= {(email, password) => this.handleRegister(email, password)}/>}
+              {props => <Register {...props} handleRegister= {(email, password, userName) => this.handleRegister(email, password, userName)}/>}
           </Drawer.Screen>
 </>
 

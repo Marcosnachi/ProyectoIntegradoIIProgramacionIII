@@ -6,7 +6,7 @@ export default class Register extends Component {
     constructor (props){
         super(props);
         this.state = {
-            UserName: '',
+            userName: '',
             email: '',
             password: ''
             
@@ -23,9 +23,9 @@ export default class Register extends Component {
 
                 <TextInput
                 style = {styles.field}
-                keyboardType = 'email-address'
+                keyboardType = 'default'
                 placeholder = 'User name'
-                onChangeText = {text => this.setState({UserName: text})}
+                onChangeText = {text => this.setState({userName: text})}
                 />
 
                 <TextInput
@@ -43,7 +43,7 @@ export default class Register extends Component {
                 secureTextEntry = {true}
                 />
                 
-                <TouchableOpacity style = {styles.button} onPress = {()=> this.props.handleRegister(this.state.email, this.state.password, this.state.UserName)}>
+                <TouchableOpacity style = {styles.button} onPress = {()=> this.props.handleRegister(this.state.email, this.state.password, this.state.userName)}>
 
                  <Text style = {styles.text}> Register </Text> 
 
