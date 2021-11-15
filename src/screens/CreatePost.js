@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
+import MyCamera from "../components/MyCamera";
 import { auth, db } from "../firebase/config";
 
 export default class CreatePost extends Component {
@@ -13,6 +14,8 @@ export default class CreatePost extends Component {
     super(props);
     this.state = {
       comment: "",
+      photo: "",
+      showCamera: true,
     };
   }
 
@@ -24,6 +27,7 @@ export default class CreatePost extends Component {
         createdAt: Date.now(),
         likes: [],
         comments: [],
+        photo: this.state.photo,
       })
       .then((response) => {
         console.log(response);
@@ -42,23 +46,32 @@ export default class CreatePost extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.field}
-          keyboardType="default"
-          placeholder="What are you thinking?"
-          multiline={true}
-          numberOfLines={4}
-          onChangeText={(text) => this.setState({ comment: text })}
-          value={this.state.comment}
-        />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.handlePost()}
-        >
-          <Text style={styles.text}> Post </Text>
-        </TouchableOpacity>
-      </View>
+      <>
+        {this.state.showCamera ? (
+          <MyCamera savePhoto={(url) => this.guardarFoto(url)} />
+        ) : (
+          <>
+            <View style={styles.container}>
+              <Image source={{ uri: this.state.photo }} style={styles.imagen} />
+              <TextInput
+                style={styles.field}
+                keyboardType="default"
+                placeholder="What are you thinking?"
+                multiline={true}
+                numberOfLines={4}
+                onChangeText={(text) => this.setState({ comment: text })}
+                value={this.state.comment}
+              />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => this.handlePost()}
+              >
+                <Text style={styles.text}> Post </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </>
     );
   }
 }
@@ -82,5 +95,9 @@ const styles = StyleSheet.create({
   text: {
     color: "#FFA400",
     fontSize: 20,
+  },
+  imagen: {
+    height: 300,
+    width: "90%",
   },
 });
