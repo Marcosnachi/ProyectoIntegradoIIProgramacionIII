@@ -1,55 +1,58 @@
-import React, { Component } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
-import { auth, db } from '../firebase/config';
-import Post from '../components/Post';
+import React, { Component } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { auth, db } from "../firebase/config";
+import Post from "../components/Post";
 
 export default class Home extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            posts: []
-        }
-    }
-    componentDidMount(){
+  constructor(props) {
+    super(props);
+    this.state = {
+      posts: [],
+    };
+  }
+  componentDidMount() {
+    db.collection("posts")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((docs) => {
+        let postsAux = [];
+        docs.forEach((doc) => {
+          postsAux.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        this.setState({
+          posts: postsAux,
+        });
+      });
+  }
 
-        db.collection('posts').orderBy("createdAt", "desc").onSnapshot(
-            docs => {
+  render() {
+    return (
+      <View>
+        <Text> Home </Text>
 
-                let postsAux = [] 
-                docs.forEach( doc => {
-                    postsAux.push({
-                        id: doc.id,
-                        data: doc.data()
-                    })
-                })
-                this.setState({
-                    posts: postsAux
-                })
-            }
-        )
-    }
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => this.props.handleLogout()}
+        >
+          <Text style={styles.text}> Logout </Text>
+        </TouchableOpacity>
 
-    render(){
-        return(
-            <View>
-                
-                <Text> Home </Text>
-
-                <TouchableOpacity style = {styles.button} onPress={() => this.props.handleLogout()}>
-                    <Text style = {styles.text}> Logout </Text>
-                </TouchableOpacity>
-
-                <FlatList
-                data = {this.state.posts}
-                keyExtractor = {post => post.id.toString()}
-                renderItem = { ({item}) => 
-                    <Post item = {item}></Post> }
-                />
-            </View>
-        )
-    }
+        <FlatList
+          data={this.state.posts}
+          keyExtractor={(post) => post.id.toString()}
+          renderItem={({ item }) => <Post dataItem={item}></Post>}
+        />
+      </View>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-    
-})
+const styles = StyleSheet.create({});
