@@ -4,6 +4,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
   StyleSheet,
 } from "react-native";
 import MyCamera from "../components/MyCamera";
