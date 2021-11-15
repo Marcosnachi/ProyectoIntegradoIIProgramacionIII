@@ -24,6 +24,7 @@ export default class CreatePost extends Component {
       .add({
         owner: auth.currentUser.displayName,
         description: this.state.comment,
+        email: auth.currentUser.email,
         createdAt: Date.now(),
         likes: [],
         comments: [],
@@ -42,6 +43,13 @@ export default class CreatePost extends Component {
         console.log(error);
         alert("error");
       });
+  }
+
+  guardarFoto(url) {
+    this.setState({
+      photo: url,
+      showCamera: false,
+    });
   }
 
   render() {
