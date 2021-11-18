@@ -9,6 +9,7 @@ import Home from '../screens/Home';
 import { auth } from '../firebase/config';
 import CreatePost from '../screens/CreatePost';
 import MyProfile from '../screens/MyProfile'
+import SearchUser from '../screens/SearchUser'
 
 
 
@@ -121,6 +122,10 @@ render(){
 
                 <Drawer.Screen name = "My Profile">
                 {props => <MyProfile {...props} handleLogout={()=>this.handleLogout()} />}
+                </Drawer.Screen>
+
+                <Drawer.Screen name = "Search User">
+                {props => <SearchUser {...props} search={()=>this.search()} />}
                 </Drawer.Screen>
 
 

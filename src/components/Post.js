@@ -180,13 +180,24 @@ export default class Post extends Component {
                 onChangeText={(text) => this.setState({ comment: text })}
                 value={this.state.comment}
               />
+
+              {this.state.comment !== '' ?
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => this.commentPost()}
               >
+
                 <Text style={styles.text}> Comentar </Text>
-              </TouchableOpacity>
-            </View>
+              </TouchableOpacity> :
+
+          <TouchableOpacity
+          style={styles.button}
+          >
+
+<Text style={styles.text}> Comentar </Text>
+</TouchableOpacity>
+
+              }</View>
           </Modal>
         ) : null}
         <TouchableOpacity onPress={() => this.deletePost()}>
