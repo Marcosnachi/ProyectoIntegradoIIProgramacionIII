@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
+  TextInput,
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import firebase from "firebase";
@@ -17,6 +18,7 @@ export default class Post extends Component {
       liked: false,
       likes: 0,
       showModal: false,
+      comment: "",
     };
   }
 
@@ -79,6 +81,40 @@ export default class Post extends Component {
     });
   }
 
+  deletePost() {
+    db.collection("posts")
+      .doc(this.props.dataItem.id)
+      .delete()
+      .then(() => {
+        console.log("Borradísimo");
+      })
+      .catch((error) => {
+        console.error("Error removiendo documento: ", error);
+      });
+  }
+
+  commentPost() {
+    db.collection("posts")
+      .doc(this.props.dataItem.data.comments)
+      .add({
+        owner: auth.currentUser.displayName,
+        createdAt: Date.now(),
+        comment: [],
+      })
+      .then((response) => {
+        console.log(response);
+        alert("Comentario creado con exito");
+        this.setState({
+          comment: "",
+        });
+        this.props.navigation.navigate("Home");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("error");
+      });
+  }
+
   render() {
     console.log(this.props.dataItem);
     return (
@@ -86,6 +122,10 @@ export default class Post extends Component {
         <Text>{this.props.dataItem.data.description}</Text>
         <Text>{this.props.dataItem.data.createdAt}</Text>
         <Text>{this.props.dataItem.data.owner}</Text>
+        <Image
+          style={styles.image}
+          source={{ uri: this.props.dataItem.data.photo }}
+        />
         <Text>Likes: {this.state.likes}</Text>
         {!this.state.liked ? (
           <TouchableOpacity onPress={() => this.onLike()}>
@@ -120,13 +160,34 @@ export default class Post extends Component {
               >
                 <Text style={styles.modalText}>X</Text>
               </TouchableOpacity>
-              <Text>Aquí también irán los comentarios!</Text>
-              <Text>
-                Aquí también debe ir la posibilidad de agregar un comentario
-              </Text>
+              {this.props.dataItem.data.comments.length !== 0 ? (
+                <Text>{this.props.dataItem.data.comments}</Text>
+              ) : (
+                <Text>
+                  <i>Aún no hay comentarios. Sé el primero en opinar.</i>
+                </Text>
+              )}
+              <TextInput
+                style={styles.field}
+                keyboardType="default"
+                placeholder="Escribí acá"
+                multiline={true}
+                numberOfLines={1}
+                onChangeText={(text) => this.setState({ comment: text })}
+                value={this.state.comment}
+              />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => this.commentPost()}
+              >
+                <Text style={styles.text}> Comentar </Text>
+              </TouchableOpacity>
             </View>
           </Modal>
         ) : null}
+        <TouchableOpacity onPress={() => this.deletePost()}>
+          <Text>Borrar posteo</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -141,6 +202,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 5,
   },
+  field: {
+    width: "80%",
+    backgroundColor: "#09009B",
+    color: "#FFA400",
+    padding: 10,
+    marginVertical: 10,
+  },
+  comment: {
+    width: "50%",
+    backgroundColor: "#08389B",
+    color: "#FFA400",
+    padding: 8,
+    marginVertical: 10,
+  },
   closeModal: {
     alignSelf: "flex-end",
     padding: 10,
@@ -149,7 +224,10 @@ const styles = StyleSheet.create({
     marginBotom: 10,
     borderRadius: 4,
   },
-
+  button: {
+    width: "30%",
+    backgroundColor: "#0F00FF",
+  },
   modalText: {
     fontWeight: "bold",
     color: "#fff",

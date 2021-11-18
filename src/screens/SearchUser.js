@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import Post from "../components/Post";
@@ -17,6 +18,7 @@ export default class Home extends Component {
       posts: [],
     };
   }
+
   componentDidMount() {
     db.collection("posts")
       .orderBy("createdAt", "desc")
@@ -37,15 +39,15 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text> Home </Text>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.handleLogout()}
-        >
-          <Text style={styles.text}> Logout </Text>
-        </TouchableOpacity>
-
+        <TextInput
+          style={styles.search}
+          keyboardType="default"
+          placeholder="Escribe tu búsqueda"
+          multiline={false}
+          numberOfLines={1}
+          onChangeText={(text) => this.setState({ comment: text })}
+          value={this.state.comment}
+        />
         <FlatList
           data={this.state.posts}
           keyExtractor={(post) => post.id.toString()}
@@ -61,6 +63,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   field: {
+    width: "100%",
+    backgroundColor: "#01029C",
+    color: "#FFA400",
+    padding: 10,
+    marginVertical: 10,
+  },
+  search: {
     width: "80%",
     backgroundColor: "#09009B",
     color: "#FFA400",

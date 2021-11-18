@@ -14,7 +14,7 @@ export default class CreatePost extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      comment: "",
+      description: "",
       photo: "",
       showCamera: true,
     };
@@ -24,7 +24,7 @@ export default class CreatePost extends Component {
     db.collection("posts")
       .add({
         owner: auth.currentUser.displayName,
-        description: this.state.comment,
+        description: this.state.description,
         email: auth.currentUser.email,
         createdAt: Date.now(),
         likes: [],
@@ -35,7 +35,7 @@ export default class CreatePost extends Component {
         console.log(response);
         alert("Posteo realizado con exito");
         this.setState({
-          comment: "",
+          description: "",
         });
         console.log(this.props);
         this.props.navigation.navigate("Home");
@@ -68,8 +68,8 @@ export default class CreatePost extends Component {
                 placeholder="What are you thinking?"
                 multiline={true}
                 numberOfLines={4}
-                onChangeText={(text) => this.setState({ comment: text })}
-                value={this.state.comment}
+                onChangeText={(text) => this.setState({ description: text })}
+                value={this.state.description}
               />
               <TouchableOpacity
                 style={styles.button}
