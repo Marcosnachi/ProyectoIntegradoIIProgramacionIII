@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  FlatList,
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import firebase from "firebase";
@@ -94,29 +95,24 @@ export default class Post extends Component {
   }
 
   commentPost() {
-    db.collection("posts")
-      .doc(this.props.dataItem.data.comments)
-      .add({
-        owner: auth.currentUser.displayName,
-        createdAt: Date.now(),
-        comment: [],
+    const posteoActualizar = db.collection("posts").doc(this.props.dataItem.id);
+
+    posteoActualizar
+      .update({
+        comments: firebase.firestore.FieldValue.arrayUnion({
+          owner: auth.currentUser.displayName,
+          createdAt: Date.now(),
+          comment: this.state.comment,
+        }),
       })
-      .then((response) => {
-        console.log(response);
-        alert("Comentario creado con exito");
+      .then(() => {
         this.setState({
           comment: "",
         });
-        this.props.navigation.navigate("Home");
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("error");
       });
   }
 
   render() {
-    console.log(this.props.dataItem);
     return (
       <View style={styles.container}>
         <Text>{this.props.dataItem.data.description}</Text>
@@ -161,7 +157,15 @@ export default class Post extends Component {
                 <Text style={styles.modalText}>X</Text>
               </TouchableOpacity>
               {this.props.dataItem.data.comments.length !== 0 ? (
-                <Text>{this.props.dataItem.data.comments}</Text>
+                <FlatList
+                  data={this.props.dataItem.data.comments}
+                  keyExtractor={(comment, idx) => idx.toString()}
+                  renderItem={({ item }) => (
+                    <Text>
+                      {item.owner} {item.comment} {item.createdAt}
+                    </Text>
+                  )}
+                />
               ) : (
                 <Text>
                   <i>Aún no hay comentarios. Sé el primero en opinar.</i>

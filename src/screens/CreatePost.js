@@ -26,7 +26,7 @@ export default class CreatePost extends Component {
         owner: auth.currentUser.displayName,
         description: this.state.description,
         email: auth.currentUser.email,
-        createdAt: Date.now(),
+        createdAt: new Date().toString(),
         likes: [],
         comments: [],
         photo: this.state.photo,
@@ -36,6 +36,8 @@ export default class CreatePost extends Component {
         alert("Posteo realizado con exito");
         this.setState({
           description: "",
+          photo: "",
+          showCamera: true,
         });
         console.log(this.props);
         this.props.navigation.navigate("Home");

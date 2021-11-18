@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  ScrollView,
   TextInput,
 } from "react-native";
 import { auth, db } from "../firebase/config";
@@ -19,10 +18,11 @@ export default class Home extends Component {
     };
   }
 
-  componentDidMount() {
+  search(text) {
     db.collection("posts")
-      .orderBy("createdAt", "desc")
-      .onSnapshot((docs) => {
+      .where("owner", "==", text)
+      .get()
+      .then((docs) => {
         let postsAux = [];
         docs.forEach((doc) => {
           postsAux.push({
@@ -33,7 +33,8 @@ export default class Home extends Component {
         this.setState({
           posts: postsAux,
         });
-      });
+      })
+      .catch((e) => console.log("error"));
   }
 
   render() {
@@ -45,7 +46,7 @@ export default class Home extends Component {
           placeholder="Escribe tu búsqueda"
           multiline={false}
           numberOfLines={1}
-          onChangeText={(text) => this.setState({ comment: text })}
+          onChangeText={(text) => this.search(text)}
           value={this.state.comment}
         />
         <FlatList
