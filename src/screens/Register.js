@@ -8,13 +8,24 @@ export default class Register extends Component {
         this.state = {
             userName: '',
             email: '',
-            password: ''
+            password: '',
+            errorMessagge: '', 
             
         }
     }
 
     
-    
+    onRegister(){
+        if (this.state.email !== "" && this.state.password !== "" && this.state.username !== ""){
+            this.props.handleRegister(this.state.email, this.state.password, this.state.username)
+        }
+        else {
+            this.setState({
+                errorMessagge: 'Completar los campos vacios',
+              });
+    }}
+
+
 
     render(){
         return(
@@ -43,11 +54,11 @@ export default class Register extends Component {
                 secureTextEntry = {true}
                 />
                 
-                <TouchableOpacity style = {styles.button} onPress = {()=> this.props.handleRegister(this.state.email, this.state.password, this.state.userName)}>
-
-                 <Text style = {styles.text}> Register </Text> 
-
+                <TouchableOpacity style = {styles.button} onPress={() => this.onRegister()}>
+                    <Text style = {styles.text}> Register </Text>
                 </TouchableOpacity>
+
+                <Text style = {styles.validation}> {this.state.errorMessagge}</Text>
 
 
             </View>
@@ -62,6 +73,12 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         
+    },
+
+    validation:
+    {
+        color: 'red',
+        marginVertical: 8,
     },
     field:{
         width: '80%',

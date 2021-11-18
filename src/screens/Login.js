@@ -7,12 +7,26 @@ export default class Login extends Component {
         super(props);
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            errorMessagge: ''
             
         }
     }
 
     
+
+    onLogin(){
+        if (this.state.email !== "" && this.state.password !== "" ){
+            this.props.handleLogin(this.state.email, this.state.password)
+        }
+        else {
+            this.setState({
+                errorMessagge: 'Completar los campos vacios',
+              });
+    }}
+
+    
+
 
     render(){
         return(
@@ -33,11 +47,11 @@ export default class Login extends Component {
                 secureTextEntry = {true}
                 />
                 
-                <TouchableOpacity style = {styles.button} onPress = {()=> this.props.handleLogin(this.state.email, this.state.password)}>
-
-                 <Text style = {styles.text}> Login </Text> 
-
+                <TouchableOpacity style = {styles.button} onPress={() => this.onLogin()}>
+                    <Text style = {styles.text}> Login </Text>
                 </TouchableOpacity>
+
+                <Text style = {styles.validation}> {this.state.errorMessagge}</Text>
 
 
             </View>
@@ -60,6 +74,11 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 10,
         
+    },
+    validation:
+    {
+        color: 'red',
+        marginVertical: 8,
     },
     button:{
         width: '30%',
