@@ -15,10 +15,17 @@ export default class Home extends Component {
     super(props);
     this.state = {
       posts: [],
+      texto: ''
     };
   }
 
   search(text) {
+
+    this.setState ({
+      texto: text,
+      posts: []
+    })
+
     db.collection("posts")
       .where("owner", "==", text)
       .get()
@@ -47,7 +54,7 @@ export default class Home extends Component {
           multiline={false}
           numberOfLines={1}
           onChangeText={(text) => this.search(text)}
-          value={this.state.comment}
+          value={this.state.texto}
         />
         {this.state.posts.length > 0 ? (
           <FlatList
@@ -56,8 +63,16 @@ export default class Home extends Component {
             renderItem={({ item }) => <Post dataItem={item}></Post>}
           />
         ) : (
+          <Text></Text>
+        )}
+        {this.state.texto == 0 ? (
+          <FlatList
+            
+          />
+        ) : (
           <Text>El usuario no existe o aún no tiene publicaciones</Text>
         )}
+
       </View>
     );
   }
