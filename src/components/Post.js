@@ -132,13 +132,6 @@ export default class Post extends Component {
             <Text>Dislike</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity
-          onPress={() => {
-            this.showModal();
-          }}
-        >
-          <Text>Ver comentarios</Text>
-        </TouchableOpacity>
         {this.state.showModal ? (
           <Modal
             animationType="fade"
@@ -162,7 +155,7 @@ export default class Post extends Component {
                   keyExtractor={(comment, idx) => idx.toString()}
                   renderItem={({ item }) => (
                     <Text>
-                      {item.owner} {item.comment} {item.createdAt}
+                      <b>{item.owner}</b> {item.comment}
                     </Text>
                   )}
                 />
@@ -181,28 +174,36 @@ export default class Post extends Component {
                 value={this.state.comment}
               />
 
-              {this.state.comment !== '' ?
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => this.commentPost()}
-              >
-
-                <Text style={styles.text}> Comentar </Text>
-              </TouchableOpacity> :
-
-          <TouchableOpacity
-          style={styles.button}
-          >
-
-<Text style={styles.text}> Comentar </Text>
-</TouchableOpacity>
-
-              }</View>
+              {this.state.comment !== "" ? (
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => this.commentPost()}
+                >
+                  <Text style={styles.text}> Comentar </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.text}> Comentar </Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </Modal>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              this.showModal();
+            }}
+          >
+            <Text>
+              Ver comentarios: {this.props.dataItem.data.comments.length}
+            </Text>
+          </TouchableOpacity>
+        )}
+        {this.props.dataItem.data.owner == auth.currentUser.displayName ? (
+          <TouchableOpacity onPress={() => this.deletePost()}>
+            <Text>Borrar posteo</Text>
+          </TouchableOpacity>
         ) : null}
-        <TouchableOpacity onPress={() => this.deletePost()}>
-          <Text>Borrar posteo</Text>
-        </TouchableOpacity>
       </View>
     );
   }

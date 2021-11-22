@@ -49,11 +49,15 @@ export default class Home extends Component {
           onChangeText={(text) => this.search(text)}
           value={this.state.comment}
         />
-        <FlatList
-          data={this.state.posts}
-          keyExtractor={(post) => post.id.toString()}
-          renderItem={({ item }) => <Post dataItem={item}></Post>}
-        />
+        {this.state.posts.length > 0 ? (
+          <FlatList
+            data={this.state.posts}
+            keyExtractor={(post) => post.id.toString()}
+            renderItem={({ item }) => <Post dataItem={item}></Post>}
+          />
+        ) : (
+          <Text>El usuario no existe o aún no tiene publicaciones</Text>
+        )}
       </View>
     );
   }

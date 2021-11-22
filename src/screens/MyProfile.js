@@ -15,18 +15,35 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
+      posts: [],
     };
   }
 
-
-
-
-  
+  componentDidMount() {
+    db.collection("posts")
+      .where("owner", "==", auth.currentUser.displayName)
+      .orderBy("createdAt", "desc")
+      .onSnapshot((docs) => {
+        let postsAux = [];
+        docs.forEach((doc) => {
+          postsAux.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        this.setState({
+          posts: postsAux,
+        });
+      });
+  }
 
   render() {
     return (
       <View style={styles.container}>
+        <Text>Nombre: {auth.currentUser.displayName}</Text>
+        <Text>Email: {auth.currentUser.email}</Text>
+        <Text>Último ingreso: {auth.currentUser.metadata.lastSignInTime}</Text>
+        <Text>Publicaciones: {this.state.posts.length}</Text>
         <TouchableOpacity
           style={styles.button}
           onPress={() => this.props.handleLogout()}
@@ -34,9 +51,13 @@ export default class Home extends Component {
           <Text style={styles.text}> Logout </Text>
         </TouchableOpacity>
 
+        <FlatList
+          data={this.state.posts}
+          keyExtractor={(post) => post.id.toString()}
+          renderItem={({ item }) => <Post dataItem={item}></Post>}
+        />
 
         <View>{auth.currentUser.owner}</View>
-
       </View>
     );
   }

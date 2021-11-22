@@ -17,6 +17,7 @@ export default class Home extends Component {
       posts: [],
     };
   }
+
   componentDidMount() {
     db.collection("posts")
       .orderBy("createdAt", "desc")
