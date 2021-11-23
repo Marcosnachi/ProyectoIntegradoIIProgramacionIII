@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import Post from "../components/Post";
@@ -15,6 +16,7 @@ export default class Home extends Component {
     super(props);
     this.state = {
       posts: [],
+      loadingPost: true,
     };
   }
 
@@ -31,6 +33,7 @@ export default class Home extends Component {
         });
         this.setState({
           posts: postsAux,
+          loadingPost: false,
         });
       });
   }
@@ -38,12 +41,15 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text> Home </Text>
-        <FlatList
-          data={this.state.posts}
-          keyExtractor={(post) => post.id.toString()}
-          renderItem={({ item }) => <Post dataItem={item}></Post>}
-        />
+        {this.state.loadingPost || this.props.loader ? (
+          <ActivityIndicator size="large" color="#00ff00" />
+        ) : (
+          <FlatList
+            data={this.state.posts}
+            keyExtractor={(post) => post.id.toString()}
+            renderItem={({ item }) => <Post dataItem={item}></Post>}
+          />
+        )}
       </View>
     );
   }
@@ -52,6 +58,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
   },
   field: {
     width: "80%",

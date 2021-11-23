@@ -19,6 +19,7 @@ export default class Menu extends Component {
     this.state = {
       loggedIn: false,
       error: null,
+      loader: true,
     };
   }
 
@@ -29,6 +30,9 @@ export default class Menu extends Component {
           loggedIn: true,
         });
       }
+      this.setState({
+        loader: false,
+      });
     });
   }
 
@@ -118,6 +122,7 @@ export default class Menu extends Component {
                       />
                     ),
                   }}
+                  loader={this.state.loader}
                 />
               )}
             </Drawer.Screen>
@@ -137,6 +142,7 @@ export default class Menu extends Component {
                     ),
                     tabBarBadge: 3,
                   }}
+                  loader={this.state.loader}
                 />
               )}
             </Drawer.Screen>
@@ -156,6 +162,7 @@ export default class Menu extends Component {
                       />
                     ),
                   }}
+                  loader={this.state.loader}
                 />
               )}
             </Drawer.Screen>
@@ -175,13 +182,14 @@ export default class Menu extends Component {
                       />
                     ),
                   }}
+                  loader={this.state.loader}
                 />
               )}
             </Drawer.Screen>
           </>
         ) : (
           <>
-            <Drawer.Screen name="Iniciar sesión">
+            <Drawer.Screen name="Login">
               {(props) => (
                 <Login
                   {...props}
@@ -192,12 +200,12 @@ export default class Menu extends Component {
                 />
               )}
             </Drawer.Screen>
-            <Drawer.Screen name="Registrarme">
+            <Drawer.Screen name="Register">
               {(props) => (
                 <Register
                   {...props}
-                  handleRegister={(email, password, username) =>
-                    this.handleRegister(email, password, username)
+                  handleRegister={(email, password, userName) =>
+                    this.handleRegister(email, password, userName)
                   }
                 />
               )}
@@ -208,59 +216,3 @@ export default class Menu extends Component {
     );
   }
 }
-
-//         <Drawer.Navigator initialRouteName="Login">
-//           {this.state.loggedIn === true ? (
-//             <>
-//               <Drawer.Screen name="Home">
-//                 {(props) => <Home {...props} />}
-//               </Drawer.Screen>
-
-//               <Drawer.Screen name="Create Post">
-//                 {(props) => <CreatePost {...props} />}
-//               </Drawer.Screen>
-
-//               <Drawer.Screen name="My Profile">
-//                 {(props) => (
-//                   <MyProfile
-//                     {...props}
-//                     handleLogout={() => this.handleLogout()}
-//                   />
-//                 )}
-//               </Drawer.Screen>
-
-//               <Drawer.Screen name="Search User">
-//                 {(props) => (
-//                   <SearchUser {...props} search={() => this.search()} />
-//                 )}
-//               </Drawer.Screen>
-//             </>
-//           ) : (
-//             <>
-//               <Drawer.Screen name="Login">
-//                 {(props) => (
-//                   <Login
-//                     {...props}
-//                     handleLogin={(email, password) =>
-//                       this.handleLogin(email, password)
-//                     }
-//                   />
-//                 )}
-//               </Drawer.Screen>
-//               <Drawer.Screen name="Register">
-//                 {(props) => (
-//                   <Register
-//                     {...props}
-//                     handleRegister={(email, password, userName) =>
-//                       this.handleRegister(email, password, userName)
-//                     }
-//                   />
-//                 )}
-//               </Drawer.Screen>
-//             </>
-//           )}
-//         </Drawer.Navigator>
-//       </NavigationContainer>
-//     );
-//   }
-// }

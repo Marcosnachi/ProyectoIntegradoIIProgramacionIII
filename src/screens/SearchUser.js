@@ -15,16 +15,15 @@ export default class Home extends Component {
     super(props);
     this.state = {
       posts: [],
-      texto: ''
+      texto: "",
     };
   }
 
   search(text) {
-
-    this.setState ({
+    this.setState({
       texto: text,
-      posts: []
-    })
+      posts: [],
+    });
 
     db.collection("posts")
       .where("owner", "==", text)
@@ -41,7 +40,7 @@ export default class Home extends Component {
           posts: postsAux,
         });
       })
-      .catch((e) => console.log("error"));
+      .catch((e) => console.log(e));
   }
 
   render() {
@@ -66,13 +65,10 @@ export default class Home extends Component {
           <Text></Text>
         )}
         {this.state.texto == 0 ? (
-          <FlatList
-            
-          />
+          <FlatList />
         ) : (
           <Text>El usuario no existe o aún no tiene publicaciones</Text>
         )}
-
       </View>
     );
   }
@@ -81,6 +77,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
   },
   field: {
     width: "100%",
