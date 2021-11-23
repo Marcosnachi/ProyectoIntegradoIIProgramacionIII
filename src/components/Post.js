@@ -92,7 +92,10 @@ export default class Post extends Component {
       .catch((error) => {
         console.error("Error removiendo documento: ", error);
       });
-  }
+      document.location.reload()
+      }
+      
+      
 
   commentPost() {
     const posteoActualizar = db.collection("posts").doc(this.props.dataItem.id);

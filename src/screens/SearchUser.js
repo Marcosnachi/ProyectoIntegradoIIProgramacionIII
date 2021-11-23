@@ -64,7 +64,7 @@ export default class Home extends Component {
         ) : (
           <Text></Text>
         )}
-        {this.state.texto == 0 ? (
+        {this.state.texto == 0 || this.state.posts.length > 0? (
           <FlatList />
         ) : (
           <Text>El usuario no existe o aún no tiene publicaciones</Text>
