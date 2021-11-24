@@ -6,7 +6,6 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import { auth, db } from "../firebase/config";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class Register extends Component {
@@ -18,22 +17,9 @@ export default class Register extends Component {
       password: "",
       repeatPassword: "",
       errorMessagge: "",
-      users: [],
     };
   }
 
-  componentDidMount() {
-    db.collection("users").onSnapshot((docs) => {
-      let usersAux = [];
-      docs.forEach((doc) => {
-        usersAux.push(doc.data());
-      });
-      this.setState({
-        users: usersAux,
-      });
-    });
-    console.log(this.state.users);
-  }
 
   onRegister() {
     if (
@@ -47,11 +33,20 @@ export default class Register extends Component {
     } else if (
       !this.state.email.includes(("@" && ".com") || ("@" && ".com.ar"))
     ) {
-      alert("El formato del mail no es correcto. Por favor, revíselo");
+      this.setState({
+        errorMessagge: "El formato del mail no es correcto. Por favor, revíselo",
+      });
+
     } else if (this.state.password !== this.state.repeatPassword) {
-      alert("Las contraseñas no coinciden. Por favor, revíselas");
+      this.setState({
+        errorMessagge: "Las contraseñas no coinciden. Por favor, revíselas",
+      });
+      
     } else if (this.state.password.length < 6) {
-      alert("La contraseña debe tener al menos 6 caracteres");
+      this.setState({
+        errorMessagge: "La contraseña debe tener al menos 6 caracteres",
+      });
+
     } else {
       this.props.handleRegister(
         this.state.email,
@@ -185,7 +180,7 @@ const styles = StyleSheet.create({
   },
   validation: {
     color: "red",
-    marginVertical: 8,
+    marginVertical: 4,
   },
   field: {
     width: "80%",

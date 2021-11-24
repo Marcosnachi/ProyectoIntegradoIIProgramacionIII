@@ -215,7 +215,7 @@ export default class Post extends Component {
             >
               <View style={styles.modalView}>
                 {/* Botón de cierre del modal */}
-                <TouchableOpacity
+                <TouchableOpacity style={styles.closeModal}
                   onPress={() => {
                     this.closeModal();
                   }}
@@ -402,6 +402,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: "0px",
     top: "0px",
+    backgroundColor: "#454545"
   },
   commentaries: {
     paddingTop: 15,
@@ -444,5 +445,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: "8px",
     bottom: "0.4px",
+  },
+  closeModal: {
+    alignSelf: "flex-end",
+    padding: 10,
+    backgroundColor: "#dc3545",
+    marginTop: 2,
+    marginBotom: 10,
+    borderRadius: 4,
   },
 });
