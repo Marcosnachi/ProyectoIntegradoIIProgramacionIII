@@ -40,8 +40,7 @@ export default class CreatePost extends Component {
           photo: "",
           showCamera: true,
         });
-        console.log(this.props);
-        this.props.navigation.navigate("Home");
+        this.props.navigation.navigate("Inicio");
       })
       .catch((error) => {
         console.log(error);
@@ -112,7 +111,6 @@ const styles = StyleSheet.create({
   },
   button: {
     alignSelf: "center",
-    color: "#F0B90B",
   },
   imagen: {
     height: 300,

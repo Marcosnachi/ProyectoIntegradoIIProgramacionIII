@@ -50,28 +50,20 @@ export default class Home extends Component {
           >
             <Ionicons name="ios-log-out" size="30px" color="#F0B90B" />
           </TouchableOpacity>
-          <View
-            style={{
-              paddingTop: 15,
-              borderBottomColor: "#1c1c1c",
-              borderBottomWidth: 1,
-              width: "80%",
-              alignSelf: "center",
-            }}
-          />
-          <View style={styles.email}>
-            <Text style={styles.hotmail}>Email</Text>
-            <Text style={styles.emailText}>{auth.currentUser.email}</Text>
+          <View style={styles.line} />
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Email</Text>
+            <Text style={styles.titleText}>{auth.currentUser.email}</Text>
           </View>
-          <View style={styles.email}>
-            <Text style={styles.hotmail}>Último ingreso</Text>
-            <Text style={styles.emailText}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Último ingreso</Text>
+            <Text style={styles.titleText}>
               {auth.currentUser.metadata.lastSignInTime}
             </Text>
           </View>
-          <View style={styles.email}>
-            <Text style={styles.hotmail}>Total de publicaciones</Text>
-            <Text style={styles.emailText}>{this.state.posts.length}</Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Total de publicaciones</Text>
+            <Text style={styles.titleText}>{this.state.posts.length}</Text>
           </View>
         </View>
         <FlatList
@@ -100,17 +92,24 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     color: "#fff",
   },
-  email: {
+  line: {
+    paddingTop: 15,
+    borderBottomColor: "#1c1c1c",
+    borderBottomWidth: 1,
+    width: "80%",
+    alignSelf: "center",
+  },
+  titleContainer: {
     flexDirection: "row",
     paddingLeft: 18,
     paddingTop: 10,
   },
-  hotmail: {
+  title: {
     color: "#454545",
     fontWeight: "bold",
     fontSize: "15px",
   },
-  emailText: {
+  titleText: {
     paddingLeft: 8,
     color: "#fff",
     fontSize: "15px",

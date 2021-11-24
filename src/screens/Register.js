@@ -20,33 +20,20 @@ export default class Register extends Component {
     };
   }
 
-
   onRegister() {
-    if (
-      this.state.email == "" &&
-      this.state.password == "" &&
-      this.state.userName == ""
-    ) {
+    if (!this.state.email.includes(("@" && ".com") || ("@" && ".com.ar"))) {
       this.setState({
-        errorMessagge: "Completar los campos vacios",
+        errorMessagge:
+          "El formato del mail no es correcto. Por favor, revíselo.",
       });
-    } else if (
-      !this.state.email.includes(("@" && ".com") || ("@" && ".com.ar"))
-    ) {
-      this.setState({
-        errorMessagge: "El formato del mail no es correcto. Por favor, revíselo",
-      });
-
     } else if (this.state.password !== this.state.repeatPassword) {
       this.setState({
-        errorMessagge: "Las contraseñas no coinciden. Por favor, revíselas",
+        errorMessagge: "Las contraseñas no coinciden. Por favor, revíselas.",
       });
-      
     } else if (this.state.password.length < 6) {
       this.setState({
-        errorMessagge: "La contraseña debe tener al menos 6 caracteres",
+        errorMessagge: "La contraseña debe tener al menos 6 caracteres.",
       });
-
     } else {
       this.props.handleRegister(
         this.state.email,
@@ -179,6 +166,7 @@ const styles = StyleSheet.create({
     fontSize: "15px",
   },
   validation: {
+    paddingTop: 10,
     color: "red",
     marginVertical: 4,
   },

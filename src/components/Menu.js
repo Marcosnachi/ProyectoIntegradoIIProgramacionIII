@@ -38,7 +38,7 @@ export default class Menu extends Component {
       .signInWithEmailAndPassword(email, password)
       .then((response) => {
         console.log(response);
-        alert("logueado");
+        alert("Iniciaste sesión correctamente");
 
         this.setState({
           loggedIn: true,

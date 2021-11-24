@@ -20,14 +20,11 @@ export default class Login extends Component {
   }
 
   onLogin() {
-    if (this.state.email == "" || this.state.password == "") {
+    if (!this.state.email.includes(("@" && ".com") || ("@" && ".com.ar"))) {
       this.setState({
-        errorMessagge: "Completar los campos vacios",
+        errorMessagge:
+          "El formato del mail no es correcto. Por favor, revíselo.",
       });
-    } else if (
-      !this.state.email.includes(("@" && ".com") || ("@" && ".com.ar"))
-    ) {
-      alert("El formato del mail no es correcto. Por favor, revíselo");
     } else {
       this.props.handleLogin(this.state.email, this.state.password);
     }
@@ -75,8 +72,8 @@ export default class Login extends Component {
                 size="40px"
                 style={
                   this.state.email == "" || this.state.password == ""
-                    ? styles.buttonOut
-                    : styles.buttonIn
+                    ? styles.buttonOff
+                    : styles.buttonOn
                 }
               />
             </TouchableOpacity>
@@ -137,13 +134,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: "#F0B90B",
   },
-  buttonOut: {
+  buttonOff: {
     color: "gray",
   },
-  buttonIn: {
+  buttonOn: {
     color: "black",
   },
   validation: {
+    paddingTop: 10,
     color: "red",
     marginVertical: 8,
   },

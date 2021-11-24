@@ -107,23 +107,19 @@ export default class Post extends Component {
   commentPost() {
     const posteoActualizar = db.collection("posts").doc(this.props.dataItem.id);
 
-    if (this.state.comment == "") {
-      alert("Escribe un comentario!");
-    } else {
-      posteoActualizar
-        .update({
-          comments: firebase.firestore.FieldValue.arrayUnion({
-            owner: auth.currentUser.displayName,
-            createdAt: Date.now(),
-            comment: this.state.comment,
-          }),
-        })
-        .then(() => {
-          this.setState({
-            comment: "",
-          });
+    posteoActualizar
+      .update({
+        comments: firebase.firestore.FieldValue.arrayUnion({
+          owner: auth.currentUser.displayName,
+          createdAt: Date.now(),
+          comment: this.state.comment,
+        }),
+      })
+      .then(() => {
+        this.setState({
+          comment: "",
         });
-    }
+      });
   }
 
   render() {
@@ -215,7 +211,8 @@ export default class Post extends Component {
             >
               <View style={styles.modalView}>
                 {/* Botón de cierre del modal */}
-                <TouchableOpacity style={styles.closeModal}
+                <TouchableOpacity
+                  style={styles.closeModal}
                   onPress={() => {
                     this.closeModal();
                   }}
@@ -261,12 +258,18 @@ export default class Post extends Component {
                       value={this.state.comment}
                     />
                   </View>
-                  <TouchableOpacity onPress={() => this.commentPost()}>
+                  <TouchableOpacity
+                    disabled={this.state.comment == "" ? true : false}
+                    onPress={() => this.commentPost()}
+                  >
                     <Ionicons
-                      style={styles.sendComment}
+                      style={
+                        this.state.comment == ""
+                          ? styles.noSendComment
+                          : styles.sendComment
+                      }
                       name="md-send"
                       size="20px"
-                      color="#F0B90B"
                     />
                   </TouchableOpacity>
                 </View>
@@ -394,7 +397,13 @@ const styles = StyleSheet.create({
     width: "30%",
     backgroundColor: "#0F00FF",
   },
+  noSendComment: {
+    color: "gray",
+    paddingTop: 8,
+    paddingLeft: 15,
+  },
   sendComment: {
+    color: "#F0B90B",
     paddingTop: 8,
     paddingLeft: 15,
   },
@@ -402,10 +411,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: "0px",
     top: "0px",
-    backgroundColor: "#454545"
+    backgroundColor: "#454545",
   },
   commentaries: {
-    paddingTop: 15,
+    paddingTop: 5,
     paddingLeft: 7,
   },
   commentMaster: {
@@ -421,7 +430,7 @@ const styles = StyleSheet.create({
   },
   noComments: {
     color: "#fff",
-    paddingTop: 15,
+    paddingTop: 5,
     paddingLeft: 7,
   },
 
