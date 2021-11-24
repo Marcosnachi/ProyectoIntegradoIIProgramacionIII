@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import MyCamera from "../components/MyCamera";
 import { auth, db } from "../firebase/config";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class CreatePost extends Component {
   constructor(props) {
@@ -67,17 +68,20 @@ export default class CreatePost extends Component {
               <TextInput
                 style={styles.field}
                 keyboardType="default"
-                placeholder="What are you thinking?"
+                placeholder="¿Qué estás pensando?"
+                placeholderStyle={styles.placeholder}
                 multiline={true}
                 numberOfLines={4}
                 onChangeText={(text) => this.setState({ description: text })}
                 value={this.state.description}
               />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => this.handlePost()}
-              >
-                <Text style={styles.text}> Post </Text>
+              <TouchableOpacity onPress={() => this.handlePost()}>
+                <Ionicons
+                  style={styles.button}
+                  name="md-checkmark-circle"
+                  size="50px"
+                  color="#F0B90B"
+                />
               </TouchableOpacity>
             </View>
           </>
@@ -92,21 +96,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#1c1c1c",
+    paddingTop: 10,
   },
   field: {
     width: "80%",
-    backgroundColor: "#09009B",
-    color: "#FFA400",
+    backgroundColor: "#454545",
+    color: "#fff",
+    outlineStyle: "none",
     padding: 10,
     marginVertical: 10,
   },
-  button: {
-    width: "30%",
-    backgroundColor: "#0F00FF",
+  placeholder: {
+    color: "#424242",
+    fontWeight: "bold",
   },
-  text: {
-    color: "#FFA400",
-    fontSize: 20,
+  button: {
+    alignSelf: "center",
+    color: "#F0B90B",
   },
   imagen: {
     height: 300,

@@ -139,18 +139,18 @@ export default class Post extends Component {
             {!this.state.liked ? (
               <TouchableOpacity onPress={() => this.onLike()}>
                 <Ionicons
-                  style={styles.heart}
-                  name="md-heart-outline"
-                  size="30px"
+                  style={styles.thumbUp}
+                  name="ios-thumbs-up-outline"
+                  size="27px"
                   color="#F0B90B"
                 />
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => this.onDislike()}>
                 <Ionicons
-                  style={styles.heart}
-                  name="md-heart"
-                  size="30px"
+                  style={styles.thumbUp}
+                  name="md-thumbs-up"
+                  size="27px"
                   color="#F0B90B"
                 />
               </TouchableOpacity>
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     borderRadius: 2,
   },
-  heart: {
+  thumbUp: {
     paddingLeft: 5,
   },
   bigDescription: {
