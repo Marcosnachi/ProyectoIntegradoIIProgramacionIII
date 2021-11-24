@@ -42,13 +42,21 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         {this.state.loadingPost || this.props.loader ? (
-          <ActivityIndicator size="large" color="#00ff00" />
+          <ActivityIndicator size="large" color="#F0B90B" />
         ) : (
-          <FlatList
-            data={this.state.posts}
-            keyExtractor={(post) => post.id.toString()}
-            renderItem={({ item }) => <Post dataItem={item}></Post>}
-          />
+          <>
+            <View style={styles.welcome}>
+              <Text style={styles.welcomeText}>¡Bienvenido/a</Text>
+              <Text style={styles.welcomeName}>
+                {auth.currentUser.displayName}!
+              </Text>
+            </View>
+            <FlatList
+              data={this.state.posts}
+              keyExtractor={(post) => post.id.toString()}
+              renderItem={({ item }) => <Post dataItem={item}></Post>}
+            />
+          </>
         )}
       </View>
     );
@@ -59,13 +67,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    backgroundColor: "#1c1c1c",
   },
-  field: {
-    width: "80%",
-    backgroundColor: "#09009B",
-    color: "#FFA400",
-    padding: 10,
-    marginVertical: 10,
+  welcome: {
+    backgroundColor: "#2b2b2b",
+    width: "70%",
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginBottom: 15,
+    alignSelf: "center",
+    justifyContent: "center",
+    borderRadius: 15,
+    marginTop: 15,
+    flexDirection: "row",
+  },
+  welcomeText: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+    fontFamily: "M PLUS 2",
+    paddingRight: 8,
+  },
+  welcomeName: {
+    color: "#F0B90B",
+    fontSize: 20,
+    fontWeight: "bold",
+    fontFamily: "M PLUS 2",
   },
   button: {
     width: "30%",

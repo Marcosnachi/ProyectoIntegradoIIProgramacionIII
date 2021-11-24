@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import Post from "../components/Post";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class Home extends Component {
   constructor(props) {
@@ -46,15 +47,24 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TextInput
-          style={styles.search}
-          keyboardType="default"
-          placeholder="Escribe tu búsqueda"
-          multiline={false}
-          numberOfLines={1}
-          onChangeText={(text) => this.search(text)}
-          value={this.state.texto}
-        />
+        <View style={styles.searchContainer}>
+          <Ionicons
+            style={styles.searchIcon}
+            name="search"
+            size="20px"
+            color="gray"
+          />
+          <TextInput
+            style={styles.search}
+            keyboardType="default"
+            placeholder="Escribe tu búsqueda"
+            placeholderStyle={styles.placeholder}
+            multiline={false}
+            numberOfLines={1}
+            onChangeText={(text) => this.search(text)}
+            value={this.state.texto}
+          />
+        </View>
         {this.state.posts.length > 0 ? (
           <FlatList
             data={this.state.posts}
@@ -64,10 +74,19 @@ export default class Home extends Component {
         ) : (
           <Text></Text>
         )}
-        {this.state.texto == 0 || this.state.posts.length > 0? (
-          <FlatList />
+        {this.state.texto == 0 || this.state.posts.length > 0 ? (
+          <>
+            <FlatList />
+          </>
         ) : (
-          <Text>El usuario no existe o aún no tiene publicaciones</Text>
+          <View style={styles.error}>
+            <>
+              <Ionicons name="bug" size="70px" color="#F0B90B" />
+              <Text style={styles.textError}>
+                Ups! El usuario no existe o aún no tiene publicaciones
+              </Text>
+            </>
+          </View>
         )}
       </View>
     );
@@ -77,21 +96,33 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    backgroundColor: "#1c1c1c",
   },
-  field: {
-    width: "100%",
-    backgroundColor: "#01029C",
-    color: "#FFA400",
+  searchContainer: {
+    marginTop: 20,
+    flexDirection: "row",
+    width: "80%",
+    paddingRight: 10,
+    borderRadius: 20,
+    backgroundColor: "#454545",
+    alignSelf: "center",
+  },
+  searchIcon: {
     padding: 10,
-    marginVertical: 10,
   },
   search: {
-    width: "80%",
-    backgroundColor: "#09009B",
-    color: "#FFA400",
-    padding: 10,
-    marginVertical: 10,
+    flex: 1,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 0,
+    color: "#fff",
+    fontWeight: "bold",
+    outlineStyle: "none",
+  },
+  placeholder: {
+    color: "#424242",
+    fontWeight: "bold",
   },
   button: {
     width: "30%",
@@ -100,5 +131,14 @@ const styles = StyleSheet.create({
   text: {
     color: "#FFA400",
     fontSize: 20,
+  },
+  error: {
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textError: {
+    color: "#fff",
+    fontSize: 15,
   },
 });

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class Login extends Component {
   constructor(props) {
@@ -19,12 +20,16 @@ export default class Login extends Component {
   }
 
   onLogin() {
-    if (this.state.email !== "" && this.state.password !== "") {
-      this.props.handleLogin(this.state.email, this.state.password);
-    } else {
+    if (this.state.email == "" || this.state.password == "") {
       this.setState({
         errorMessagge: "Completar los campos vacios",
       });
+    } else if (
+      !this.state.email.includes(("@" && ".com") || ("@" && ".com.ar"))
+    ) {
+      alert("El formato del mail no es correcto. Por favor, revíselo");
+    } else {
+      this.props.handleLogin(this.state.email, this.state.password);
     }
   }
 
@@ -32,30 +37,48 @@ export default class Login extends Component {
     return (
       <View style={styles.container}>
         {this.props.loader ? (
-          <ActivityIndicator size="large" color="#00ff00" />
+          <ActivityIndicator size="large" color="#F0B90B" />
         ) : (
           <>
-            <Text> Login </Text>
+            <Text style={styles.login}> Iniciar sesión </Text>
+            <Text style={styles.email}>Email</Text>
             <TextInput
               style={styles.field}
               keyboardType="email-address"
-              placeholder="Email"
+              placeholder="Por favor, ingresa tu email"
               onChangeText={(text) => this.setState({ email: text })}
             />
-
+            <Text style={styles.password}>Contraseña</Text>
             <TextInput
               style={styles.field}
               keyboardType="email-address"
-              placeholder="Password"
+              placeholder="Por favor, introduzca su contraseña"
               onChangeText={(text) => this.setState({ password: text })}
               secureTextEntry={true}
             />
 
             <TouchableOpacity
-              style={styles.button}
+              style={
+                this.state.email == "" || this.state.password == ""
+                  ? styles.noButton
+                  : styles.button
+              }
               onPress={() => this.onLogin()}
+              disabled={
+                this.state.email == "" || this.state.password == ""
+                  ? true
+                  : false
+              }
             >
-              <Text style={styles.text}> Login </Text>
+              <Ionicons
+                name="md-arrow-forward"
+                size="40px"
+                style={
+                  this.state.email == "" || this.state.password == ""
+                    ? styles.buttonOut
+                    : styles.buttonIn
+                }
+              />
             </TouchableOpacity>
 
             <Text style={styles.validation}> {this.state.errorMessagge}</Text>
@@ -68,27 +91,65 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#1c1c1c",
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
+  login: {
+    color: "#fff",
+    fontSize: "30px",
+    paddingBottom: 10,
+  },
+  email: {
+    paddingTop: 15,
+    position: "relative",
+    right: "150px",
+    justifyContent: "flex-start",
+    color: "#737373",
+    fontWeight: "bold",
+    fontSize: "15px",
+  },
+  password: {
+    paddingTop: 15,
+    position: "relative",
+    right: "130px",
+    justifyContent: "flex-start",
+    color: "#737373",
+    fontWeight: "bold",
+    fontSize: "15px",
+  },
   field: {
     width: "80%",
-    backgroundColor: "#F78812",
-    color: "#51050F",
+    backgroundColor: "#454545",
+    color: "#fff",
     padding: 10,
     marginVertical: 10,
+    outlineStyle: "none",
+  },
+  noButton: {
+    marginLeft: 280,
+    marginTop: 20,
+    backgroundColor: "#424242",
+  },
+  button: {
+    marginLeft: 280,
+    marginTop: 20,
+    backgroundColor: "#F0B90B",
+  },
+  buttonOut: {
+    color: "gray",
+  },
+  buttonIn: {
+    color: "black",
   },
   validation: {
     color: "red",
     marginVertical: 8,
   },
   button: {
-    width: "30%",
-    backgroundColor: "#AB6D23",
-  },
-  text: {
-    color: "#51050F",
-    textAlign: "center",
+    marginLeft: 280,
+    marginTop: 20,
+    backgroundColor: "#F0B90B",
   },
 });

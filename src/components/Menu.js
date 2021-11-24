@@ -1,17 +1,14 @@
-import { StatusBar } from "expo-status-bar";
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Login from "../screens/login";
-import Register from "../screens/Register";
-import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import Home from "../screens/Home";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { auth } from "../firebase/config";
+import Home from "../screens/Home";
 import CreatePost from "../screens/CreatePost";
 import MyProfile from "../screens/MyProfile";
 import SearchUser from "../screens/SearchUser";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Login from "../screens/login";
+import Register from "../screens/Register";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class Menu extends Component {
   constructor(props) {
@@ -83,113 +80,90 @@ export default class Menu extends Component {
   }
 
   handleLogout() {
-    auth
-      .signOut()
-      .then(() => {
-        this.setState({
-          loggedIn: false,
+    let signOutConfirm = confirm(
+      "Quieres salir de tu cuenta? Recordá que podrás volver a ingresar utilizando los mismos datos"
+    );
+
+    if (signOutConfirm) {
+      auth
+        .signOut()
+        .then(() => {
+          this.setState({
+            loggedIn: false,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }
   }
 
   render() {
-    const Drawer = createBottomTabNavigator();
+    const Tab = createBottomTabNavigator();
 
     return (
-      <Drawer.Navigator
+      <Tab.Navigator
         initialRouteName="Login"
-        screenOptions={{
-          tabBarActiveTintColor: "#e91e63",
+        activeColor="#3e2465"
+        inactiveColor="#8366ae"
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === "Inicio") {
+              iconName = focused ? "home" : "home-outline";
+            } else if (route.name === "Postear") {
+              iconName = focused ? "camera" : "camera-outline";
+            } else if (route.name === "Buscar") {
+              iconName = focused ? "search" : "search-outline";
+            } else if (route.name === "Perfil") {
+              iconName = focused ? "person" : "person-outline";
+            } else if (route.name === "Iniciar sesión") {
+              iconName = focused ? "md-log-in" : "md-log-in-outline";
+            } else if (route.name === "Registrar") {
+              iconName = focused ? "person-add" : "person-add-outline";
+            }
+
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: "#F0B90B",
+          tabBarInactiveTintColor: "#F0B90B",
+        })}
+        tabBarOptions={{
+          activeBackgroundColor: "#1E2328",
+          inactiveBackgroundColor: "#1E2328",
         }}
       >
         {this.state.loggedIn === true ? (
           <>
-            <Drawer.Screen name="Home">
-              {(props) => (
-                <Home
-                  {...props}
-                  component={Home}
-                  options={{
-                    tabBarLabel: "Home",
-                    tabBarIcon: ({ color, size }) => (
-                      <MaterialCommunityIcons
-                        name="home"
-                        color={color}
-                        size={size}
-                      />
-                    ),
-                  }}
-                  loader={this.state.loader}
-                />
-              )}
-            </Drawer.Screen>
-            <Drawer.Screen name="Create Post">
-              {(props) => (
-                <CreatePost
-                  {...props}
-                  component={CreatePost}
-                  options={{
-                    tabBarLabel: "Publicar",
-                    tabBarIcon: ({ color, size }) => (
-                      <MaterialCommunityIcons
-                        name="bell"
-                        color={color}
-                        size={size}
-                      />
-                    ),
-                    tabBarBadge: 3,
-                  }}
-                  loader={this.state.loader}
-                />
-              )}
-            </Drawer.Screen>
-            <Drawer.Screen name="My Profile">
-              {(props) => (
-                <MyProfile
-                  {...props}
-                  handleLogout={() => this.handleLogout()}
-                  component={MyProfile}
-                  options={{
-                    tabBarLabel: "My Profile",
-                    tabBarIcon: ({ color, size }) => (
-                      <MaterialCommunityIcons
-                        name="account"
-                        color={color}
-                        size={size}
-                      />
-                    ),
-                  }}
-                  loader={this.state.loader}
-                />
-              )}
-            </Drawer.Screen>
-            <Drawer.Screen name="Search User">
+            <Tab.Screen name="Inicio">
+              {(props) => <Home {...props} loader={this.state.loader} />}
+            </Tab.Screen>
+            <Tab.Screen name="Postear">
+              {(props) => <CreatePost {...props} loader={this.state.loader} />}
+            </Tab.Screen>
+            <Tab.Screen name="Buscar">
               {(props) => (
                 <SearchUser
                   {...props}
                   search={() => this.search()}
-                  component={SearchUser}
-                  options={{
-                    tabBarLabel: "Search User",
-                    tabBarIcon: ({ color, size }) => (
-                      <MaterialCommunityIcons
-                        name="account"
-                        color={color}
-                        size={size}
-                      />
-                    ),
-                  }}
                   loader={this.state.loader}
                 />
               )}
-            </Drawer.Screen>
+            </Tab.Screen>
+            <Tab.Screen name="Perfil">
+              {(props) => (
+                <MyProfile
+                  {...props}
+                  handleLogout={() => this.handleLogout()}
+                />
+              )}
+            </Tab.Screen>
           </>
         ) : (
           <>
-            <Drawer.Screen name="Login">
+            <Tab.Screen name="Iniciar sesión">
               {(props) => (
                 <Login
                   {...props}
@@ -199,8 +173,8 @@ export default class Menu extends Component {
                   loader={this.state.loader}
                 />
               )}
-            </Drawer.Screen>
-            <Drawer.Screen name="Register">
+            </Tab.Screen>
+            <Tab.Screen name="Registrar">
               {(props) => (
                 <Register
                   {...props}
@@ -209,10 +183,10 @@ export default class Menu extends Component {
                   }
                 />
               )}
-            </Drawer.Screen>
+            </Tab.Screen>
           </>
         )}
-      </Drawer.Navigator>
+      </Tab.Navigator>
     );
   }
 }

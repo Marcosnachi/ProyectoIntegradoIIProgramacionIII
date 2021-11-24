@@ -2,6 +2,7 @@ import { Camera } from "expo-camera";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { storage } from "../firebase/config";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class MyCamera extends React.Component {
   constructor(props) {
@@ -66,18 +67,12 @@ export default class MyCamera extends React.Component {
           <>
             <Image style={styles.preview} source={{ uri: this.state.photo }} />
             <View style={styles.btnContainer}>
-              <TouchableOpacity
-                style={styles.reject}
-                onPress={() => this.onReject()}
-              >
-                <Text style={styles.text}>Cancelar</Text>
+              <TouchableOpacity onPress={() => this.onReject()}>
+                <Ionicons name="close-circle" size="50px" color="red" />
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.accept}
-                onPress={() => this.uploadImage()}
-              >
-                <Text style={styles.text}>Subir</Text>
+              <TouchableOpacity onPress={() => this.uploadImage()}>
+                <Ionicons name="checkmark-circle" size="50px" color="green" />
               </TouchableOpacity>
             </View>
           </>
@@ -89,10 +84,9 @@ export default class MyCamera extends React.Component {
           >
             {/* Ref hace referencia al objeto Camera, para luego utilizar sus métodos */}
             <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => this.takePicture()}
-              ></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.takePicture()}>
+                <Ionicons name="radio-button-on" size="100px" color="white" />
+              </TouchableOpacity>
             </View>
           </Camera>
         )}
@@ -112,7 +106,7 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "100%",
-    height: 124,
+    height: 100,
     position: "absolute",
     bottom: 40,
     flex: 1,
@@ -138,11 +132,11 @@ export const styles = StyleSheet.create({
   },
   preview: {
     width: "100%",
-    flex: 6,
+    flex: 7,
   },
   btnContainer: {
     flex: 1,
-    backgroundColor: "#000020",
+    backgroundColor: "#2b2b2b",
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",

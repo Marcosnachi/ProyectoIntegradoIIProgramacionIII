@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import firebase from "firebase";
+import { BorderlessButton } from "react-native-gesture-handler";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class Post extends Component {
   constructor(props) {
@@ -58,7 +60,9 @@ export default class Post extends Component {
 
     posteoActualizar
       .update({
-        likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email),
+        likes: firebase.firestore.FieldValue.arrayRemove(
+          auth.currentUser.email
+        ),
       })
       .then(() => {
         this.setState({
@@ -83,130 +87,211 @@ export default class Post extends Component {
   }
 
   deletePost() {
-    db.collection("posts")
-      .doc(this.props.dataItem.id)
-      .delete()
-      .then(() => {
-        console.log("Borradísimo");
-      })
-      .catch((error) => {
-        console.error("Error removiendo documento: ", error);
-      });
-      document.location.reload()
-      }
-      
-      
+    let deleteConfirmation = confirm(
+      "Seguro que quieres eliminar esta publicación? No podrás volver atrás!"
+    );
+
+    if (deleteConfirmation) {
+      db.collection("posts")
+        .doc(this.props.dataItem.id)
+        .delete()
+        .then(() => {
+          console.log("Borradísimo");
+        })
+        .catch((error) => {
+          console.error("Error removiendo documento: ", error);
+        });
+    }
+  }
 
   commentPost() {
     const posteoActualizar = db.collection("posts").doc(this.props.dataItem.id);
 
-    posteoActualizar
-      .update({
-        comments: firebase.firestore.FieldValue.arrayUnion({
-          owner: auth.currentUser.displayName,
-          createdAt: Date.now(),
-          comment: this.state.comment,
-        }),
-      })
-      .then(() => {
-        this.setState({
-          comment: "",
+    if (this.state.comment == "") {
+      alert("Escribe un comentario!");
+    } else {
+      posteoActualizar
+        .update({
+          comments: firebase.firestore.FieldValue.arrayUnion({
+            owner: auth.currentUser.displayName,
+            createdAt: Date.now(),
+            comment: this.state.comment,
+          }),
+        })
+        .then(() => {
+          this.setState({
+            comment: "",
+          });
         });
-      });
+    }
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text>{this.props.dataItem.data.description}</Text>
-        <Text>{this.props.dataItem.data.createdAt}</Text>
-        <Text>{this.props.dataItem.data.owner}</Text>
-        <Image
-          style={styles.image}
-          source={{ uri: this.props.dataItem.data.photo }}
-        />
-        <Text>Likes: {this.state.likes}</Text>
-        {!this.state.liked ? (
-          <TouchableOpacity onPress={() => this.onLike()}>
-            <Text>Like</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => this.onDislike()}>
-            <Text>Dislike</Text>
-          </TouchableOpacity>
-        )}
-        {this.state.showModal ? (
-          <Modal
-            animationType="fade"
-            transparent={false}
-            visible={this.state.showModal}
-            style={styles.modal}
-          >
-            <View style={styles.modalView}>
-              {/* Botón de cierre del modal */}
+        <Text style={styles.owner}>{this.props.dataItem.data.owner}</Text>
+        <View style={styles.post}>
+          <Image
+            style={styles.image}
+            source={{ uri: this.props.dataItem.data.photo }}
+          />
+          <View style={styles.likes}>
+            {!this.state.liked ? (
+              <TouchableOpacity onPress={() => this.onLike()}>
+                <Ionicons
+                  style={styles.heart}
+                  name="md-heart-outline"
+                  size="30px"
+                  color="#F0B90B"
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => this.onDislike()}>
+                <Ionicons
+                  style={styles.heart}
+                  name="md-heart"
+                  size="30px"
+                  color="#F0B90B"
+                />
+              </TouchableOpacity>
+            )}
+            <Text style={styles.textLike}>{this.state.likes}</Text>
+            {this.state.showModal ? (
               <TouchableOpacity
-                style={styles.closeModal}
                 onPress={() => {
                   this.closeModal();
                 }}
               >
-                <Text style={styles.modalText}>X</Text>
-              </TouchableOpacity>
-              {this.props.dataItem.data.comments.length !== 0 ? (
-                <FlatList
-                  data={this.props.dataItem.data.comments}
-                  keyExtractor={(comment, idx) => idx.toString()}
-                  renderItem={({ item }) => (
-                    <Text>
-                      <b>{item.owner}</b> {item.comment}
-                    </Text>
-                  )}
+                <Ionicons
+                  style={styles.chatbox}
+                  name="ios-chatbubbles"
+                  size="28px"
+                  color="#2b2b2b"
                 />
-              ) : (
-                <Text>
-                  <i>Aún no hay comentarios. Sé el primero en opinar.</i>
-                </Text>
-              )}
-              <TextInput
-                style={styles.field}
-                keyboardType="default"
-                placeholder="Escribí acá"
-                multiline={true}
-                numberOfLines={1}
-                onChangeText={(text) => this.setState({ comment: text })}
-                value={this.state.comment}
-              />
-
-              {this.state.comment !== "" ? (
+              </TouchableOpacity>
+            ) : (
+              <>
                 <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => this.commentPost()}
+                  onPress={() => {
+                    this.showModal();
+                  }}
                 >
-                  <Text style={styles.text}> Comentar </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity style={styles.button}>
-                  <Text style={styles.text}> Comentar </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </Modal>
-        ) : (
-          <TouchableOpacity
-            onPress={() => {
-              this.showModal();
-            }}
-          >
-            <Text>
-              Ver comentarios: {this.props.dataItem.data.comments.length}
+                  <Ionicons
+                    style={styles.chatbox}
+                    name="ios-chatbubbles-outline"
+                    size="28px"
+                  />
+                </TouchableOpacity>{" "}
+              </>
+            )}
+
+            <Text style={styles.textLike}>
+              {this.props.dataItem.data.comments.length}
             </Text>
-          </TouchableOpacity>
-        )}
-        {this.props.dataItem.data.owner == auth.currentUser.displayName ? (
-          <TouchableOpacity onPress={() => this.deletePost()}>
-            <Text>Borrar posteo</Text>
-          </TouchableOpacity>
-        ) : null}
+          </View>
+          <View style={styles.bigDescription}>
+            <Text style={styles.smallOwner}>
+              {this.props.dataItem.data.owner}
+            </Text>
+            <Text style={styles.description}>
+              {this.props.dataItem.data.description}
+            </Text>
+          </View>
+          <Text style={styles.created}>
+            {this.props.dataItem.data.createdAt}
+          </Text>
+          <View
+            style={{
+              borderBottomColor: "#1c1c1c",
+              borderBottomWidth: 1,
+            }}
+          />
+          {this.state.showModal ? (
+            <Modal
+              animationType="fade"
+              transparent={false}
+              visible={this.state.showModal}
+              style={styles.modal}
+            >
+              <View style={styles.modalView}>
+                {/* Botón de cierre del modal */}
+                <TouchableOpacity
+                  onPress={() => {
+                    this.closeModal();
+                  }}
+                >
+                  <Ionicons
+                    style={styles.modalX}
+                    name="md-close-circle"
+                    size="20px"
+                    color="#2b2b2b"
+                  />
+                </TouchableOpacity>
+                {this.props.dataItem.data.comments.length !== 0 ? (
+                  <FlatList
+                    style={styles.commentaries}
+                    data={this.props.dataItem.data.comments}
+                    keyExtractor={(comment, idx) => idx.toString()}
+                    renderItem={({ item }) => (
+                      <View style={styles.commentMaster}>
+                        <Text style={styles.commentTextOne}>
+                          <b>{item.owner}</b>
+                        </Text>
+                        <Text style={styles.commentTextTwo}>
+                          {item.comment}
+                        </Text>
+                      </View>
+                    )}
+                  />
+                ) : (
+                  <Text style={styles.noComments}>
+                    <i>Aún no hay comentarios. Sé el primero en opinar.</i>
+                  </Text>
+                )}
+                <View style={styles.commentaryFinal}>
+                  <View style={styles.commentContainer}>
+                    <TextInput
+                      style={styles.commentModal}
+                      keyboardType="default"
+                      placeholder="Hacé un comentario"
+                      placeholderStyle={styles.placeholder}
+                      multiline={true}
+                      numberOfLines={1}
+                      onChangeText={(text) => this.setState({ comment: text })}
+                      value={this.state.comment}
+                    />
+                  </View>
+                  <TouchableOpacity onPress={() => this.commentPost()}>
+                    <Ionicons
+                      style={styles.sendComment}
+                      name="md-send"
+                      size="20px"
+                      color="#F0B90B"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                this.showModal();
+              }}
+            >
+              <Text style={styles.comments}>Ver comentarios</Text>
+            </TouchableOpacity>
+          )}
+          {this.props.dataItem.data.owner == auth.currentUser.displayName ? (
+            <TouchableOpacity onPress={() => this.deletePost()}>
+              <Ionicons
+                style={styles.trash}
+                name="trash"
+                size="20px"
+                color="red"
+              />
+            </TouchableOpacity>
+          ) : null}
+        </View>
       </View>
     );
   }
@@ -214,48 +299,150 @@ export default class Post extends Component {
 
 const styles = StyleSheet.create({
   image: {
-    height: 200,
+    height: 185,
   },
   container: {
     flex: 1,
+    width: "90%",
     justifyContent: "center",
-    padding: 5,
+    padding: 7,
+    backgroundColor: "#2b2b2b",
+    margin: 15,
+    borderWidth: 2,
+    borderColor: "black",
+    borderRadius: 10,
+    alignSelf: "center",
   },
-  field: {
-    width: "80%",
-    backgroundColor: "#09009B",
-    color: "#FFA400",
-    padding: 10,
-    marginVertical: 10,
+  post: {
+    backgroundColor: "#454545",
+    paddingBottom: 10,
+    borderRadius: 2,
   },
-  comment: {
-    width: "50%",
-    backgroundColor: "#08389B",
-    color: "#FFA400",
-    padding: 8,
-    marginVertical: 10,
+  heart: {
+    paddingLeft: 5,
   },
-  closeModal: {
-    alignSelf: "flex-end",
-    padding: 10,
-    backgroundColor: "#dc3545",
-    marginTop: 2,
-    marginBotom: 10,
-    borderRadius: 4,
+  bigDescription: {
+    flexDirection: "row",
+    paddingTop: 6,
+    paddingBottom: 10,
+  },
+  smallOwner: {
+    fontWeight: "bold",
+    paddingLeft: 7,
+    color: "#fff",
+  },
+  owner: {
+    fontSize: "20px",
+    fontFamily: "M PLUS 2",
+    color: "#fff",
+    paddingBottom: 15,
+    paddingLeft: 5,
+  },
+  description: {
+    color: "#fff",
+    paddingLeft: 11,
+  },
+  created: {
+    color: "#fff",
+    paddingTop: 5,
+    paddingBottom: 10,
+    paddingLeft: 7,
+  },
+  likes: {
+    paddingTop: 5,
+    flexDirection: "row",
+  },
+  textLike: {
+    marginTop: 4,
+    marginLeft: 2,
+    fontFamily: "M PLUS 2",
+    fontSize: "15px",
+    color: "#fff",
+  },
+  chatbox: {
+    paddingLeft: 18,
+  },
+  commentaryFinal: {
+    flexDirection: "row",
+    marginTop: 20,
+  },
+  commentContainer: {
+    width: "85%",
+    paddingRight: 10,
+    borderRadius: 20,
+    backgroundColor: "#2b2b2b",
+  },
+  commentModal: {
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    color: "#fff",
+    fontWeight: "bold",
+    outlineStyle: "none",
+  },
+  placeholder: {
+    color: "#424242",
+    fontWeight: "bold",
+  },
+  comments: {
+    color: "#fff",
+    fontWeight: "bold",
+    paddingTop: 10,
+    paddingLeft: 7,
   },
   button: {
     width: "30%",
     backgroundColor: "#0F00FF",
   },
-  modalText: {
-    fontWeight: "bold",
+  sendComment: {
+    paddingTop: 8,
+    paddingLeft: 15,
+  },
+  modalX: {
+    position: "absolute",
+    right: "0px",
+    top: "0px",
+  },
+  commentaries: {
+    paddingTop: 15,
+    paddingLeft: 7,
+  },
+  commentMaster: {
+    flexDirection: "row",
+    paddingTop: 5,
+  },
+  commentTextOne: {
     color: "#fff",
   },
+  commentTextTwo: {
+    color: "#fff",
+    paddingLeft: 11,
+  },
+  noComments: {
+    color: "#fff",
+    paddingTop: 15,
+    paddingLeft: 7,
+  },
+
   modalView: {
-    backgroundColor: "green",
-    borderRadius: 10,
+    backgroundColor: "#454545",
   },
   modal: {
-    border: "none",
+    borderRadius: 15,
+    borderColor: "#F0B90B",
+    borderWidth: 2,
+    flex: 1,
+    width: "100%",
+    marginTop: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    marginBottom: 30,
+  },
+  trash: {
+    position: "absolute",
+    right: "8px",
+    bottom: "0.4px",
   },
 });

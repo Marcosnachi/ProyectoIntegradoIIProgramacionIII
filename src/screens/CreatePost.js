@@ -26,7 +26,7 @@ export default class CreatePost extends Component {
         owner: auth.currentUser.displayName,
         description: this.state.description,
         email: auth.currentUser.email,
-        createdAt: new Date().toString(),
+        createdAt: new Date().toLocaleString(),
         likes: [],
         comments: [],
         photo: this.state.photo,
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    backgroundColor: "#1c1c1c",
   },
   field: {
     width: "80%",
