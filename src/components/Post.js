@@ -26,16 +26,14 @@ export default class Post extends Component {
   }
 
   componentDidMount() {
-    if (this.props.dataItem) {
-      if (this.props.dataItem.data.likes.length !== 0) {
+    if (this.props.dataItem && this.props.dataItem.data.likes.length !== 0) {
+      this.setState({
+        likes: this.props.dataItem.data.likes.length,
+      });
+      if (this.props.dataItem.data.likes.includes(auth.currentUser.email)) {
         this.setState({
-          likes: this.props.dataItem.data.likes.length,
+          liked: true,
         });
-        if (this.props.dataItem.data.likes.includes(auth.currentUser.email)) {
-          this.setState({
-            liked: true,
-          });
-        }
       }
     }
   }
