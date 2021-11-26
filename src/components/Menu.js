@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { auth } from "../firebase/config";
 import Home from "../screens/Home";
@@ -15,7 +14,6 @@ export default class Menu extends Component {
     super(props);
     this.state = {
       loggedIn: false,
-      error: null,
       loader: true,
     };
   }
@@ -48,9 +46,6 @@ export default class Menu extends Component {
       .catch((error) => {
         console.log(error);
         alert("Error en el login");
-        this.setState({
-          error: "Error en el login",
-        });
       });
   }
 
@@ -73,9 +68,6 @@ export default class Menu extends Component {
       .catch((error) => {
         console.log(error);
         alert("Error en el registro");
-        this.setState({
-          error: "Error en el registro",
-        });
       });
   }
 

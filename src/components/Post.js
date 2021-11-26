@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import firebase from "firebase";
-import { BorderlessButton } from "react-native-gesture-handler";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class Post extends Component {

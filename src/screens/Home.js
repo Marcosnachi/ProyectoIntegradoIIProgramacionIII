@@ -3,9 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   FlatList,
-  ScrollView,
   ActivityIndicator,
 } from "react-native";
 import { auth, db } from "../firebase/config";

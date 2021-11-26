@@ -5,13 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  TextInput,
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import Post from "../components/Post";
-import firebase from "firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { RotationGestureHandler } from "react-native-gesture-handler";
 
 export default class Home extends Component {
   constructor(props) {

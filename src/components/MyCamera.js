@@ -1,13 +1,13 @@
 import { Camera } from "expo-camera";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { storage } from "../firebase/config";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default class MyCamera extends React.Component {
   constructor(props) {
     super(props);
-    this.camera; //Variable vacía
+    this.camera; 
     this.state = {
       photo: "",
       permission: false,
@@ -39,7 +39,6 @@ export default class MyCamera extends React.Component {
         return res.blob();
       })
       .then((image) => {
-        //console.log(image);
         const ref = storage.ref(`camera/${Date.now()}.jpg`);
         ref.put(image).then(() => {
           ref.getDownloadURL().then((url) => {
@@ -82,7 +81,6 @@ export default class MyCamera extends React.Component {
             type={Camera.Constants.Type.front || Camera.Constants.Type.back}
             ref={(referencia) => (this.camera = referencia)}
           >
-            {/* Ref hace referencia al objeto Camera, para luego utilizar sus métodos */}
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={() => this.takePicture()}>
                 <Ionicons name="radio-button-on" size="100px" color="white" />
